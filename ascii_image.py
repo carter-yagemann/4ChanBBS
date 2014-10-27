@@ -12,8 +12,6 @@ def convert_image(img, x, y):
     WCF = 7/4
  
     S = (x, y)
-    #S = ( round(img.size[0]*WCF), round(img.size[1]*WCF) )
-    #img = np.sum( np.asarray( img.resize(S) ), axis=2)
     img = np.sum( np.asarray( img.resize(S) ), axis=2)
     img -= img.min()
     img = (1.0 - img/img.max())*(chars.size-1)

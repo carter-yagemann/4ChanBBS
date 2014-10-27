@@ -29,7 +29,6 @@ If you need additional help or examples, try help <command>.
 '''
     prompt = "4ChanBBS> "
     continue_prompt = "Press any key to continue..."
-    error_message = "An error occured while processing your request..."
 
 
     ## Server Configuration
