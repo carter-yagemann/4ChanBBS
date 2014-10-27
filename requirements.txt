@@ -1,2 +1,4 @@
 telnetsrv>=0.4
 requests>=2.4.3
+numpy>=1.6.1
+Pillow>=2.6.1
