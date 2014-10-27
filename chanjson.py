@@ -48,7 +48,7 @@ class ChanServer:
         try:
             url = 'https://0.t.4cdn.org/' + str(board) + '/' + str(imgID) + 's.jpg'
             file = ascii_image.open_url(url)
-            img = ascii_image.convert_image(file, 70, 50)
+            img = ascii_image.convert_image(file, 60, 40)
             return img
         except:
             print 'Failed to get image for ', board, ' ', imgID

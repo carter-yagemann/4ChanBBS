@@ -10,11 +10,11 @@ from htmlcleaner import strip_tags
 ##----------------------------------------------
 class MyTelnetHandler(TelnetHandler):
 
+    showImages = True
 
     WELCOME = config.welcome_message
     PROMPT = config.prompt
     CONTINUE_PROMPT = config.continue_prompt
-
 
     def session_start(self):
         if (config.offline_mode):
@@ -56,6 +56,7 @@ class MyTelnetHandler(TelnetHandler):
         if (len(params) == 0):
             self.writeerror('Missing argument.')
             return
+
         server = chanjson.ChanServer()
         try:
             boards = server.getBoards()['boards']
@@ -82,7 +83,7 @@ class MyTelnetHandler(TelnetHandler):
                 except:
                     pass
 
-                if 'tim' in op.keys():
+                if 'tim' in op.keys() and self.showImages:
                     self.writeresponse(' ')
                     img = server.getThumbNail(params[0], op['tim'])
                     self.writeresponse(img)
@@ -133,7 +134,7 @@ class MyTelnetHandler(TelnetHandler):
             except:
                 pass
 
-            if 'tim' in post.keys():
+            if 'tim' in post.keys() and self.showImages:
                 self.writeresponse(' ')
                 img = server.getThumbNail(params[0], post['tim'])
                 self.writeresponse(img)
@@ -149,6 +150,24 @@ class MyTelnetHandler(TelnetHandler):
             response = self.readline(prompt='Enter - Next Reply | q - Quit: ')
             if (response.lower() == 'q'):
                 return
+
+    @command(['enableimages', 'ei'])
+    def command_enableimages(self, params):
+        '''
+        Enables showing images in posts.
+
+        '''
+        self.writeresponse("Images have been enabled.")
+        self.showImages = True
+
+    @command(['disableimages', 'di'])
+    def command_disableimages(self, params):
+        '''
+        Disables showing images in posts.
+
+        '''
+        self.writeresponse("Images have been disabled.")
+        self.showImages = False
 
 
 ## TCP Server

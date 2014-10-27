@@ -23,7 +23,7 @@ class config:
 New to the server? Here's a quick guide:
 	lb                      - List all the available boards
 	lt <boardID>            - List the threads for a board
-        gr <boardID> <threadID> - Get the replies for a thread
+        ei/di                   - Enable/Disable the showing of images
 
 If you need additional help or examples, try help <command>.
 '''
