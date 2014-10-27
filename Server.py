@@ -22,6 +22,7 @@ class MyTelnetHandler(TelnetHandler):
         Lists available boards.
         
         '''
+        server = chanjson.ChanServer()
         data = server.getBoards()
         self.writeresponse('*------*-------------------------*')
         self.writeresponse('| ID   | Name                    |')
@@ -51,6 +52,7 @@ class MyTelnetHandler(TelnetHandler):
         if (len(params) == 0):
             self.writeerror('Missing argument.')
             return
+        server = chanjson.ChanServer()
         try:
             boards = server.getBoards()['boards']
             for board in boards:
@@ -97,11 +99,11 @@ class MyTelnetHandler(TelnetHandler):
         Use listboards and listthreads to get the IDs.
         Example: 'gr a 1' will list the replies for the thread on /a/ with ID 1.
         '''
-        #getReplies
         if (len(params) < 2):
             self.writeerror('Missing arguments.')
             return
 
+        server = chanjson.ChanServer()
         try:
             posts = server.getReplies(params[0], params[1])['posts']
         except:
@@ -139,6 +141,5 @@ class TelnetServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 ## Main
 ##----------------------------------------------
-server = chanjson.ChanServer()
 tcpserver = TelnetServer((config.server, config.port), MyTelnetHandler)
 tcpserver.serve_forever()
