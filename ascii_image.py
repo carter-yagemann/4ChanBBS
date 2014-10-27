@@ -14,12 +14,6 @@ def convert_image(img, x, y):
             string += color[int(sum(rgb) / 3.0 / 256.0 * 23)]
         string += "\n"
 
-    #S = (x, y)
-    #img = np.sum( np.asarray( img.resize(S) ), axis=2)
-    #img -= img.min()
-    #img = (1.0 - img/img.max())*(chars.size-1)
- 
-    #data = ( "\n".join( ("".join(r) for r in chars[img.astype(int)]) ) )
     return string
 
 def open_url(URL):
