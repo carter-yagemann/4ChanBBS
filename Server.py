@@ -4,6 +4,7 @@ import SocketServer
 from telnetsrv.threaded import TelnetHandler, command
 from config import config
 import chanjson
+from htmlcleaner import strip_tags
 
 ## Telnet Server
 ##----------------------------------------------
@@ -75,12 +76,12 @@ class MyTelnetHandler(TelnetHandler):
 
                 if 'com' in op.keys():
                     try:
-                        self.writeresponse(unicode(op['com']))
+                        self.writeresponse(op['com'])
                     except:
                         pass
 
                 self.writeresponse('replies: ' + str(op['replies']))
-                self.writeresponse('---')
+                self.writeresponse('---\n')
 
             if (page == (pages - 1)):
                 return
@@ -96,7 +97,39 @@ class MyTelnetHandler(TelnetHandler):
         Use listboards and listthreads to get the IDs.
         Example: 'gr a 1' will list the replies for the thread on /a/ with ID 1.
         '''
-        #TODO
+        #getReplies
+        if (len(params) < 2):
+            self.writeerror('Missing arguments.')
+            return
+
+        try:
+            posts = server.getReplies(params[0], params[1])['posts']
+        except:
+            self.writeerror('Communication error or invalid board ID...')
+            return
+
+        post_count = 0
+        for post in posts:
+            header = str(post['no']) + ' - ' + post['name']
+            try:
+                self.writeresponse(header)
+            except:
+                pass
+
+            if 'com' in post.keys():
+                    try:
+                        self.writeresponse(strip_tags(post['com']))
+                    except:
+                        pass
+            self.writeresponse('---\n')
+
+            post_count = post_count + 1
+            if (post_count > 10):
+                post_count = 0
+                response = self.readline(prompt='Load more replies? [y/n] ')
+                if (response.lower() == 'n'):
+                    return
+
 
 ## TCP Server
 ##----------------------------------------------

@@ -19,3 +19,13 @@ class ChanServer:
         except:
             print 'Failed to process getThreads()'
             return ''
+
+    # Get posts for a particular thread
+    def getReplies(self, board, thread):
+        try:
+            response = requests.get(url='https://a.4cdn.org/' + board + '/thread/' + str(thread) + '.json')
+            data = json.loads(response.text)
+            return data
+        except:
+            print 'Failed to process getReplies()'
+            return ''
