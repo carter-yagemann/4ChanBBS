@@ -1,15 +1,9 @@
-import sys
 from PIL import Image
 import numpy as np
+import urllib, cStringIO
 
 def convert_image(img, x, y): 
     chars = np.asarray(list(' .,:;irsXA253hMHGS#9B&@'))
- 
-    if len(sys.argv) < 1:
-        print( 'Error: Missing Arguments' )
-        return
-
-    WCF = 7/4
  
     S = (x, y)
     img = np.sum( np.asarray( img.resize(S) ), axis=2)
@@ -18,3 +12,12 @@ def convert_image(img, x, y):
  
     data = ( "\n".join( ("".join(r) for r in chars[img.astype(int)]) ) )
     return data
+
+def open_url(URL):
+    try:
+        file = cStringIO.StringIO(urllib.urlopen(URL).read())
+        img = Image.open(file)
+        return img
+    except:
+        print('Error: Failed to open image at ', URL)
+        return
