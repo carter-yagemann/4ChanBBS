@@ -16,6 +16,10 @@ class MyTelnetHandler(TelnetHandler):
     CONTINUE_PROMPT = config.continue_prompt
 
 
+    def session_start(self):
+        if (config.offline_mode):
+            self.writeresponse('\n\x1b[31;1m** OFFLINE MODE IS CURRENTLY ENABLED! **\x1b[0m\n')
+
     @command(['listboards', 'lb'])
     def command_listboards(self, params):
         '''
@@ -64,10 +68,12 @@ class MyTelnetHandler(TelnetHandler):
             self.writeerror('Communication error or invalid board ID...')
             return
 
-        for page in range(1, pages):
+        for page in range(1, pages - 1):
             threads = server.getThreads(params[0], page)['threads']
             for thread in threads:
                 op = thread['posts'][0]
+                self.writeresponse(' ')
+                self.writeresponse('*-------------------------------*')
                 header = str(op['no']) + ' - ' + op['name']
                 if 'sub' in op.keys():
                     header = header + ' - ' + op['sub']
@@ -83,13 +89,15 @@ class MyTelnetHandler(TelnetHandler):
                         pass
 
                 self.writeresponse('replies: ' + str(op['replies']))
-                self.writeresponse('---\n')
+                self.writeresponse('*-------------------------------*\n')
 
-            if (page == (pages - 1)):
-                return
-            response = self.readline(prompt='Load next page? [y/n] ')
-            if (response.lower() == 'n'):
-                return
+                response = self.readline(prompt='Enter - Next Thread | o - Open Thread | q - Quit: ')
+                if (response.lower() == 'q'):
+                    return
+                elif (response.lower() == 'o'):
+                    self.command_getreplies([params[0], op['no']])
+                    return
+
 
     @command(['getreplies', 'gr'])
     def command_getreplies(self, params):
@@ -110,8 +118,9 @@ class MyTelnetHandler(TelnetHandler):
             self.writeerror('Communication error or invalid board ID...')
             return
 
-        post_count = 0
         for post in posts:
+            self.writeresponse(' ')
+            self.writeresponse('*-------------------------------*')
             header = str(post['no']) + ' - ' + post['name']
             try:
                 self.writeresponse(header)
@@ -123,14 +132,11 @@ class MyTelnetHandler(TelnetHandler):
                         self.writeresponse(strip_tags(post['com']))
                     except:
                         pass
-            self.writeresponse('---\n')
+            self.writeresponse('*-------------------------------*\n')
 
-            post_count = post_count + 1
-            if (post_count > 10):
-                post_count = 0
-                response = self.readline(prompt='Load more replies? [y/n] ')
-                if (response.lower() == 'n'):
-                    return
+            response = self.readline(prompt='Enter - Next Reply | q - Quit: ')
+            if (response.lower() == 'q'):
+                return
 
 
 ## TCP Server
