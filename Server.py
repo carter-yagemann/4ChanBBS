@@ -76,7 +76,7 @@ class MyTelnetHandler(TelnetHandler):
 
                 if 'com' in op.keys():
                     try:
-                        self.writeresponse(op['com'])
+                        self.writeresponse(strip_tags(op['com']))
                     except:
                         pass
 

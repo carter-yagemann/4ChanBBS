@@ -8,6 +8,18 @@ class MLStripper(HTMLParser):
         self.fed.append(d)
     def get_data(self):
         return ''.join(self.fed)
+    def handle_starttag(self, tag, attrs):
+        if (tag == 'br'):
+            self.fed.append("\n")
+    def handle_entityref(self, name):
+        if (name == 'nbsp'):
+            self.fed.append(' ')
+        elif (name == 'lt'):
+            self.fed.append('<')
+        elif (name == 'gt'):
+            self.fed.append('>')
+        elif (name == 'amp'):
+            self.fed.append('&')
 
 def strip_tags(html):
     s = MLStripper()
