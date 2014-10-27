@@ -1,6 +1,7 @@
 ## Imports
 ##------------------------------------------------------
 import json, requests
+import ascii_image
 from config import config
 if (config.offline_mode):
     import test_data
@@ -38,3 +39,17 @@ class ChanServer:
         except:
             print 'Failed to process getReplies()'
             return ''
+
+    # Get thumbnail for a post
+    def getThumbNail(self, board, imgID):
+        if (config.offline_mode):
+            return '**********\n**********'
+
+        try:
+            url = 'https://0.t.4cdn.org/' + str(board) + '/' + str(imgID) + 's.jpg'
+            file = ascii_image.open_url(url)
+            img = ascii_image.convert_image(file, 70, 50)
+            return img
+        except:
+            print 'Failed to get image for ', board, ' ', imgID
+            return
