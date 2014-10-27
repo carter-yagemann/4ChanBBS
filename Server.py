@@ -133,7 +133,7 @@ class MyTelnetHandler(TelnetHandler):
 
 ## TCP Server
 ##----------------------------------------------
-class TelnetServer(SocketServer.TCPServer):
+class TelnetServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True
 
 
