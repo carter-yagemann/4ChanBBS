@@ -82,6 +82,12 @@ class MyTelnetHandler(TelnetHandler):
                 except:
                     pass
 
+                if 'tim' in op.keys():
+                    self.writeresponse(' ')
+                    img = server.getThumbNail(params[0], op['tim'])
+                    self.writeresponse(img)
+                    self.writeresponse(' ')
+
                 if 'com' in op.keys():
                     try:
                         self.writeresponse(strip_tags(op['com']))
@@ -126,6 +132,12 @@ class MyTelnetHandler(TelnetHandler):
                 self.writeresponse(header)
             except:
                 pass
+
+            if 'tim' in post.keys():
+                self.writeresponse(' ')
+                img = server.getThumbNail(params[0], post['tim'])
+                self.writeresponse(img)
+                self.writeresponse(' ')
 
             if 'com' in post.keys():
                     try:
