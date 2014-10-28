@@ -107,8 +107,8 @@ class MyTelnetHandler(TelnetHandler):
             for thread in threads:
                 op = thread['posts'][0]
                 self.writeresponse(' ')
-                self.writeresponse('*-------------------------------*')
-                header = str(op['no']) + ' - ' + str(op['name'])
+                self.writeresponse('\x1b[34m*-------------------------------*\x1b[0m')
+                header = str(op['no']) + ' - \x1b[31;1m' + str(op['name']) + '\x1b[0m'
                 if 'sub' in op.keys():
                     header = header + ' - ' + str(op['sub'])
                 try:
@@ -129,7 +129,7 @@ class MyTelnetHandler(TelnetHandler):
                         pass
 
                 self.writeresponse('replies: ' + str(op['replies']))
-                self.writeresponse('*-------------------------------*\n')
+                self.writeresponse('\x1b[34m*-------------------------------*\x1b[0m\n')
 
                 response = self.readline(prompt='Enter - Next Thread | o - Open Thread | q - Quit: ')
                 if (response.lower() == 'q'):
@@ -160,8 +160,8 @@ class MyTelnetHandler(TelnetHandler):
 
         for post in posts:
             self.writeresponse(' ')
-            self.writeresponse('*-------------------------------*')
-            header = str(post['no']) + ' - ' + str(post['name'])
+            self.writeresponse('\x1b[34m*-------------------------------*\x1b[0m')
+            header = str(post['no']) + ' - \x1b[31;1m' + str(post['name']) + '\x1b[0m'
             try:
                 self.writeresponse(header)
             except:
@@ -178,7 +178,7 @@ class MyTelnetHandler(TelnetHandler):
                         self.writeresponse(strip_tags(post['com']))
                     except:
                         pass
-            self.writeresponse('*-------------------------------*\n')
+            self.writeresponse('\x1b[34m*-------------------------------*\x1b[0m\n')
 
             response = self.readline(prompt='Enter - Next Reply | q - Quit: ')
             if (response.lower() == 'q'):
