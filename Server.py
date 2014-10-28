@@ -33,10 +33,10 @@ class MyTelnetHandler(TelnetHandler):
         self.writeresponse('*------*-------------------------*')
         for board in data['boards']:
             try:
-                line = '| ' + board['board']
+                line = '| ' + str(board['board'])
                 for x in range(len(line), 7):
                     line = line + ' '
-                line = line + '| ' + board['title']
+                line = line + '| ' + str(board['title'])
                 for x in range(len(line), 33):
                     line = line + ' '
                 line = line + '|'
@@ -75,9 +75,9 @@ class MyTelnetHandler(TelnetHandler):
                 op = thread['posts'][0]
                 self.writeresponse(' ')
                 self.writeresponse('*-------------------------------*')
-                header = str(op['no']) + ' - ' + op['name']
+                header = str(op['no']) + ' - ' + str(op['name'])
                 if 'sub' in op.keys():
-                    header = header + ' - ' + op['sub']
+                    header = header + ' - ' + str(op['sub'])
                 try:
                     self.writeresponse(header)
                 except:
@@ -128,7 +128,7 @@ class MyTelnetHandler(TelnetHandler):
         for post in posts:
             self.writeresponse(' ')
             self.writeresponse('*-------------------------------*')
-            header = str(post['no']) + ' - ' + post['name']
+            header = str(post['no']) + ' - ' + str(post['name'])
             try:
                 self.writeresponse(header)
             except:

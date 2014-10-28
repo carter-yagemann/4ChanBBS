@@ -21,7 +21,7 @@ class ChanServer:
         if (config.offline_mode):
             return json.loads(test_data.threads_list)
         try:
-            response = requests.get(url='https://a.4cdn.org/' + board + '/' + str(page) + '.json')
+            response = requests.get(url='https://a.4cdn.org/' + str(board) + '/' + str(page) + '.json')
             data = json.loads(response.text)
             return data
         except:
@@ -33,7 +33,7 @@ class ChanServer:
         if (config.offline_mode):
             return json.loads(test_data.replies_list)
         try:
-            response = requests.get(url='https://a.4cdn.org/' + board + '/thread/' + str(thread) + '.json')
+            response = requests.get(url='https://a.4cdn.org/' + str(board) + '/thread/' + str(thread) + '.json')
             data = json.loads(response.text)
             return data
         except:
