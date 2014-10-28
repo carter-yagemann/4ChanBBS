@@ -20,10 +20,16 @@
 ## Imports
 ##----------------------------------------------
 import SocketServer
+import logging
 from telnetsrv.threaded import TelnetHandler, command
 from config import config
 import chanjson
 from htmlcleaner import strip_tags
+
+## Logging Configuration
+##----------------------------------------------
+FORMAT = '[%(asctime)-15s] %(message)s'
+logging.basicConfig(format=FORMAT)
 
 ## Telnet Server
 ##----------------------------------------------
@@ -36,8 +42,14 @@ class MyTelnetHandler(TelnetHandler):
     CONTINUE_PROMPT = config.continue_prompt
 
     def session_start(self):
+        logger = logging.getLogger('')
+        logger.info('Connections: A user has connected.')
         if (config.offline_mode):
             self.writeresponse('\n\x1b[31;1m** OFFLINE MODE IS CURRENTLY ENABLED! **\x1b[0m\n')
+
+    def session_end(self):
+        logger = logging.getLogger('')
+        logger.info('Connections: A user has disconnected.')
 
     @command(['listboards', 'lb'])
     def command_listboards(self, params):
@@ -62,7 +74,8 @@ class MyTelnetHandler(TelnetHandler):
                 self.writeresponse(line)
                 self.writeresponse('*------*-------------------------*')
             except:
-                print 'Error: Failed to print board name'
+                logger = logging.getLogger('')
+                logger.error('Error: Failed to print board name')
 
     @command(['listthreads', 'lt'])
     def command_listthreads(self, params):
@@ -84,7 +97,8 @@ class MyTelnetHandler(TelnetHandler):
                     board_info = board
             pages = board_info['pages']
         except:
-            print 'Error: Failed to get board info: ', params[0]
+            logger = logging.getLogger('')
+            logger.error('Error: Failed to get board info: %s', str(params[0]))
             self.writeerror('Communication error or invalid board ID...')
             return
 
@@ -197,5 +211,12 @@ class TelnetServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 ## Main
 ##----------------------------------------------
+logger = logging.getLogger('')
+logger.setLevel(config.loggingLevel)
+logger.info("Starting server on port %d", config.port)
 tcpserver = TelnetServer((config.server, config.port), MyTelnetHandler)
-tcpserver.serve_forever()
+logger.info("Server running.")
+try:
+    tcpserver.serve_forever()
+except KeyboardInterrupt:
+    logger.info("Server shutting down.")

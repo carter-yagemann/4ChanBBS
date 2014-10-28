@@ -21,6 +21,7 @@
 ##------------------------------------------------------
 import json, requests
 import ascii_image
+import logging
 from config import config
 if (config.offline_mode):
     import test_data
@@ -44,7 +45,8 @@ class ChanServer:
             data = json.loads(response.text)
             return data
         except:
-            print 'Failed to process getThreads()'
+            logger = logging.getLogger('')
+            logger.error('Error: Failed to process getThreads()')
             return ''
 
     # Get posts for a particular thread
@@ -56,7 +58,8 @@ class ChanServer:
             data = json.loads(response.text)
             return data
         except:
-            print 'Failed to process getReplies()'
+            logger = logging.getLogger('')
+            logger.error('Error: Failed to process getReplies()')
             return ''
 
     # Get thumbnail for a post
@@ -70,5 +73,7 @@ class ChanServer:
             img = ascii_image.convert_image(file, 60, 40)
             return img
         except:
-            print 'Failed to get image for ', board, ' ', imgID
+            logger = logging.getLogger('')
+            request = str(board) + ' => ' + str(imgID)
+            logger.error('Error: Failed to get image for %s', request)
             return

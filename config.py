@@ -17,7 +17,10 @@
 #    See <http://www.gnu.org/licenses/> for a full copy of the license.
 #
 
+import logging
+
 class config:
+
     ## Stock Messages
     ##-----------------------------------
     welcome_message = '''\x1b[31;1m
@@ -54,6 +57,7 @@ If you need additional help or examples, try help <command>.
     ##-----------------------------------
     server = "0.0.0.0"
     port = 5000
+    loggingLevel = logging.INFO
 
     ## OFFLINE DEVELOPMENT MODE
     ##-----------------------------------
