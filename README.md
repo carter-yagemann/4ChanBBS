@@ -1,3 +1,8 @@
+Live Server
+===========
+
+telnet://bbs.carteryagemann.com
+
 4Chan BBS
 =========
 
