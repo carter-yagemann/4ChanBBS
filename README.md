@@ -56,3 +56,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 See <http://www.gnu.org/licenses/> for the full license.
+
+Donations
+---------
+
+If this project brought a smile to your face, please consider donating a dollar or two to help cover the demo server cost: [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A7TNEZJYA975N&lc=US&item_name=Carter%20Yagemann&item_number=1&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
