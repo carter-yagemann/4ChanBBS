@@ -1,6 +1,7 @@
 Live Server
 ===========
 
+(Offline due to lack of funds)
 telnet://bbs.carteryagemann.com
 
 4Chan BBS
