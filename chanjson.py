@@ -68,7 +68,7 @@ class ChanServer:
             return '**********\n**********'
 
         try:
-            url = 'https://0.t.4cdn.org/' + str(board) + '/' + str(imgID) + 's.jpg'
+            url = 'https://i.4cdn.org/' + str(board) + '/' + str(imgID) + 's.jpg'
             file = ascii_image.open_url(url)
             img = ascii_image.convert_image(file, 60, 40)
             return img
