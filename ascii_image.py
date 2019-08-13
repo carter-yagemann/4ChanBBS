@@ -17,29 +17,22 @@
 #    See <http://www.gnu.org/licenses/> for a full copy of the license.
 #
 
+import aalib
+import io
 from PIL import Image
-import urllib, cStringIO
+import urllib
 
-def convert_image(img, x, y): 
-    color = ' .,:;irsXA253hMHGS#9B&@'
- 
-    img = img.resize((x, y))
-    pixel = img.load()
-
-    string = ""    
-    for h in xrange(y):
-        for w in xrange(x):
-            rgb = pixel[w, h]
-            string += color[int(sum(rgb) / 3.0 / 256.0 * 23)]
-        string += "\n"
-
-    return string
+def convert_image(img, x, y):
+    screen = aalib.AsciiScreen(width=x, height=y)
+    img = img.convert('L').resize(screen.virtual_size)
+    screen.put_image((0, 0), img)
+    return screen.render()
 
 def open_url(URL):
     try:
-        file = cStringIO.StringIO(urllib.urlopen(URL).read())
+        file = io.BytesIO(urllib.urlopen(URL).read())
         img = Image.open(file)
         return img
-    except:
-        print('Error: Failed to open image at ', URL)
+    except Exception as ex:
+        print('Error: Failed to open image at %s: %s' % (URL, str(ex)))
         return
