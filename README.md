@@ -1,8 +1,5 @@
-Live Server
-===========
-
-(Offline due to lack of funds)
-telnet://bbs.carteryagemann.com
+**Note:** This project is no longer maintained and only works on Python 2.x, which
+is now discontinued. Last tested on 2.7.16.
 
 4Chan BBS
 =========
