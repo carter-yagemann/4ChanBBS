@@ -46,11 +46,16 @@ New to the server? Here's a quick guide:
 	lb                      - List all the available boards
 	lt <boardID>            - List the threads for a board
         ei/di                   - Enable/Disable the showing of images
+        exit                    - Closes client connection
 
 If you need additional help or examples, try help <command>.
 '''
     prompt = "4ChanBBS> "
     continue_prompt = "Press any key to continue..."
+    showImages = True
+    img_hight = 40 # y  these values are finicky, and sometimes segfaults when changed,
+    img_width = 80 # x  be aware if you change them this might happen. aalib is weird
+                   # (y:40, x:80): Big, (y:20, x:40): Small  are values to get started
 
 
     ## Server Configuration
