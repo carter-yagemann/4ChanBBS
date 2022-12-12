@@ -19,61 +19,96 @@
 
 ## Imports
 ##------------------------------------------------------
-import json, requests
-import ascii_image
+import json
 import logging
+
+import requests
+
+import ascii_image
 from config import config
-if (config.offline_mode):
+
+if config.offline_mode:
     import test_data
 
+
 class ChanServer:
-    
+
+    def __init__(self) -> None:
+        self._boards = None
+        self._session = requests.Session()
+
+        self._boards = self.getBoards()
+
+    def close_session(self) -> None:
+        self._session.close()
+
     # Gets all the boards
     def getBoards(self):
-        if (config.offline_mode):
+
+        if self._boards:
+            return self._boards
+
+        if config.offline_mode:
             return json.loads(test_data.boards_list)
-        response = requests.get(url='https://a.4cdn.org/boards.json')
+        
+        response = self._session.get(url='https://a.4cdn.org/boards.json')
         data = json.loads(response.text)
         return data
 
     # Get a page of threads from a board
     def getThreads(self, board, page):
-        if (config.offline_mode):
+        if config.offline_mode:
             return json.loads(test_data.threads_list)
         try:
-            response = requests.get(url='https://a.4cdn.org/' + str(board) + '/' + str(page) + '.json')
+            response = self._session.get(
+                url='https://a.4cdn.org/' + str(board) + '/' + str(page) + '.json')
             data = json.loads(response.text)
             return data
         except:
-            logger = logging.getLogger('')
-            logger.error('Error: Failed to process getThreads()')
+            self._logger.error('Error: Failed to process getThreads()')
             return ''
 
     # Get posts for a particular thread
     def getReplies(self, board, thread):
-        if (config.offline_mode):
+        if config.offline_mode:
             return json.loads(test_data.replies_list)
         try:
-            response = requests.get(url='https://a.4cdn.org/' + str(board) + '/thread/' + str(thread) + '.json')
+            response = self._session.get(
+                url='https://a.4cdn.org/' + str(board) + '/thread/' + str(thread) + '.json')
             data = json.loads(response.text)
             return data
         except:
-            logger = logging.getLogger('')
-            logger.error('Error: Failed to process getReplies()')
+            self._logger.error('Error: Failed to process getReplies()')
             return ''
 
     # Get thumbnail for a post
     def getThumbNail(self, board, imgID):
-        if (config.offline_mode):
+        if config.offline_mode:
             return '**********\n**********'
 
         try:
-            url = 'https://i.4cdn.org/' + str(board) + '/' + str(imgID) + 's.jpg'
-            file = ascii_image.open_url(url)
-            img = ascii_image.convert_image(file, 60, 40)
+            url = 'https://i.4cdn.org/' + \
+                str(board) + '/' + str(imgID) + 's.jpg'
+
+            content = (self._session.get(url)).content
+            file = ascii_image.open_img(content)
+            img = ascii_image.convert_image(img=file, x=config.img_width, y=config.img_hight)
+
             return img
         except:
-            logger = logging.getLogger('')
             request = str(board) + ' => ' + str(imgID)
-            logger.error('Error: Failed to get image for %s', request)
+            self._logger.error('Error: Failed to get image for %s', request)
             return
+
+    @property
+    def _logger(self):
+        """Adds the class name to log messages by instantating
+        logger to the class it is used in
+
+        Returns:
+            logger: this classes logger
+        """
+        return logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+
+    def __str__(self) -> str:
+        return str(self.__class__.__name__)
