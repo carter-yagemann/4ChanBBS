@@ -1,5 +1,4 @@
-**Note:** This project is no longer maintained and only works on Python 2.x, which
-is now discontinued. Last tested on 2.7.16.
+**Note:** This project is not activly maintained. Last tested on 3.8.10
 
 4Chan BBS
 =========
@@ -28,7 +27,7 @@ more pesky GUIs!
 Installation
 ------------
 
-The easiest way to setup 4Chan BBS is to install Python 2.7 and PIP. Run 
+The easiest way to setup 4Chan BBS is to install Python 3.8 and PIP. Run 
 `pip install -r requirements.txt` to get all the required libraries and then 
 start the server using `python Server.py`.
 
