@@ -27,12 +27,14 @@ more pesky GUIs!
 Installation
 ------------
 
-The easiest way to setup 4Chan BBS is to install Python 3.8 and PIP. Run 
-`pip install -r requirements.txt` to get all the required libraries and then 
-start the server using `python Server.py`.
+The easiest way to setup 4Chan BBS is to install Python 3.8, PIP and libaa1. Install `libaa1`
+with a command similar to `sudo apt install libaa1`.  Then run `pip install -r requirements.txt` 
+to get all the required libraries.
 
-If you get an error while trying to install Pillow, you may have to download some additonal
-libraries using a command like `sudo apt-get build-dep python-imaging`.
+To start the server run `python Server.py`.
+
+If you get an error while trying to install Pillow, you may have to download some 
+additonal libraries using a command like `sudo apt-get build-dep python-imaging`.
 
 Configuration
 -------------
