@@ -38,8 +38,8 @@ logging.basicConfig(format=FORMAT)
 class Client():
 
     def __init__(self) -> None:
-        self._reader: telnetlib3.stream_reader = None
-        self._writer: telnetlib3.stream_writer = None
+        self._reader: telnetlib3.TelnetReaderUnicode = None
+        self._writer: telnetlib3.TelnetWriterUnicode = None
         self._params: list = None
         self._server: chanjson.ChanServer = chanjson.ChanServer()
         self._show_images: bool = config.showImages
@@ -73,7 +73,8 @@ class Client():
 
         line = line.replace('\n', '\r\n')
         self._writer.write(line)
-
+        await self._writer.drain()
+          
     async def entry_point(self, reader, writer) -> None:
         """Entry point for client. Passes in objects and starts
         client session.
@@ -270,6 +271,17 @@ class Client():
         await self._writer.drain()
         self._writer.close()
         return True
+    
+    def handle_naws(self, width: int, height:int) -> None:
+        """catches NAWS updates.  Negotiate About
+        Window Size (naws) allows the client to advertize its 
+        terminal window size to the server.
+
+        Args:
+            width (int): width in characters
+            height (int): height in characters
+        """
+        ...
 
     async def handler(self) -> None:
         """Handler method. Handles interactions with client.
@@ -293,8 +305,17 @@ class Client():
         }
 
         commands.update(command_aliases)
-        await self._writer.writeline(config.welcome_message)
+        
+        # tell the client to support echo if they want it
+        self._writer.iac(telnetlib3.WONT, telnetlib3.ECHO)
+        # tell the client to not use go ahead, this allows backspace
+        self._writer.iac(telnetlib3.WONT, telnetlib3.SGA)
+        
+        self._writer.iac(telnetlib3.DO, telnetlib3.NAWS)
+        
+        self._writer.set_ext_callback(telnetlib3.NAWS, self.handle_naws)
 
+        await self._writer.writeline(config.welcome_message)
         stop = False
 
         while not stop:
