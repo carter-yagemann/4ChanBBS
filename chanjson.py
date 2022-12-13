@@ -82,7 +82,7 @@ class ChanServer:
             return ''
 
     # Get thumbnail for a post
-    def getThumbNail(self, board, imgID):
+    def getThumbNail(self, board, imgID, dimentions: tuple):
         if config.offline_mode:
             return '**********\n**********'
 
@@ -92,7 +92,7 @@ class ChanServer:
 
             content = (self._session.get(url)).content
             file = ascii_image.open_img(content)
-            img = ascii_image.convert_image(img=file, x=config.img_width, y=config.img_hight)
+            img = ascii_image.convert_image(img=file, x=dimentions[0], y=dimentions[1])
 
             return img
         except:
