@@ -63,7 +63,7 @@ If you need additional help or examples, try help <command>.
     ##-----------------------------------
     server = "0.0.0.0"
     port = 5000
-    loggingLevel = logging.DEBUG
+    loggingLevel = logging.INFO
 
     ## OFFLINE DEVELOPMENT MODE
     ##-----------------------------------
