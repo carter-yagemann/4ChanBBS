@@ -154,6 +154,7 @@ class Client():
         try:
             boards = self._server.getBoards()['boards']
 
+            board_info = {}
             for board in boards:
                 if self._params[0] == board['board']:
                     board_info = board
