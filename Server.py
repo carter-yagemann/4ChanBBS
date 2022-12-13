@@ -212,7 +212,7 @@ class Client():
                     await self.command_getreplies([self._params[0], op['no']])
                     return
 
-    async def command_getreplies(self, thread_id: list) -> None:
+    async def command_getreplies(self, thread_id: list= None) -> None:
         """Cycles through the list of replies for a thread
 
             <boardID> <threadID>
@@ -224,6 +224,9 @@ class Client():
         Args:
             thread_id (list): [<boardID>, <threadID>]
         """
+        
+        if not thread_id:
+            thread_id = [self._params[0], self._params[1]]
 
         try:
             posts = self._server.getReplies(
@@ -288,6 +291,54 @@ class Client():
         self._writer.close()
         return True
     
+    async def command_help(self) -> None:
+        """default help command
+        """
+        
+        short_help = '''
+        Usage: COMMAND {board} {thread}
+        
+            where COMMAND := {lb, lt, gr, di, ei, h, exit}
+        '''
+        
+        long_help = '''Commands -> (<name>, <alias>): usage
+        listboards, lb:
+            list avalible boards.
+                ex: lb
+                
+        listthreads, lt: 
+            list the threads in a board. lt <board name>
+                ex: lt b
+                
+        getreplies, gr: 
+            list replies to a thread.  gr <board name> <threadID>
+                ex: gr a 1
+                
+        disableimages, di:
+            disables downloading of images. di
+            
+        enableimages, ei
+            enables downloading of images. ei
+            
+        help, h:
+            shows this message
+            
+        exit:
+            asks server to close client connection'''
+        
+        help_msg = long_help if 'help' in self._cmd else short_help
+        
+        await self._writer.writeline(help_msg)
+    
+    
+    async def command_bad_cmd(self) -> None:
+        """default commmand not found method
+        
+        """
+        await self._writer.writeline(f'cmd not found.  Try h or help for valid commands')
+        self._logger.debug("bad command attempted")
+        
+    
     def handle_naws(self, width: int, height:int) -> None:
         """catches NAWS updates.  Negotiate About
         Window Size (naws) allows the client to advertize its 
@@ -310,7 +361,8 @@ class Client():
             'getreplies': self.command_getreplies,
             'enableimages': self.command_enableimages,
             'disableimages': self.command_disableimages,
-            'exit': self.command_exit
+            'exit': self.command_exit,
+            'help': self.command_help
         }
 
         command_aliases = {
@@ -318,7 +370,8 @@ class Client():
             'lt': commands['listthreads'],
             'gr': commands['getreplies'],
             'ei': commands['enableimages'],
-            'di': commands['disableimages']
+            'di': commands['disableimages'],
+            'h': self.command_help
         }
 
         commands.update(command_aliases)
@@ -346,9 +399,10 @@ class Client():
 
             req: list = req.strip().split()
 
-            if len(req) > 0 and req[0] in commands:
+            if len(req) > 0:
+                self._cmd = req[0]
                 self._params = req[1:] # throw away cmd and keep only params
-                stop = await commands[req[0]]()
+                stop = await commands.get(req[0], self.command_bad_cmd)()
 
         return
 
