@@ -53,16 +53,17 @@ If you need additional help or examples, try help <command>.
     prompt = "4ChanBBS> "
     continue_prompt = "Press any key to continue..."
     showImages = True
-    img_hight = 40 # y  these values are finicky, and sometimes segfaults when changed,
-    img_width = 80 # x  be aware if you change them this might happen. aalib is weird
-                   # (y:40, x:80): Big, (y:20, x:40): Small  are values to get started
+    naws = True # if naws is true then images are generated to fit the client window size
+    img_hight = 40 # y
+    img_width = 80 # x
+
 
 
     ## Server Configuration
     ##-----------------------------------
     server = "0.0.0.0"
     port = 5000
-    loggingLevel = logging.INFO
+    loggingLevel = logging.DEBUG
 
     ## OFFLINE DEVELOPMENT MODE
     ##-----------------------------------
