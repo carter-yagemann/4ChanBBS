@@ -43,7 +43,24 @@ class Client():
         self._params: list = None
         self._server: chanjson.ChanServer = chanjson.ChanServer()
         self._show_images: bool = config.showImages
+        self._img_size: tuple = None
         self._logger.info("Server is ready for connections")
+
+    @property
+    def img_size(self) -> tuple:
+        """returns size to make images as a tuple.
+        Values are ints corrisponding to character values.
+
+        Returns:
+            tuple: (width: int, height: int)
+        """
+        img: tuple = ()
+        if config.naws:
+            # scale values to be roughly square.
+            img = (min(self._img_size)*2, (min(self._img_size)))
+        else:
+            img = (config.img_width, config.img_hight)
+        return img
 
     @property
     def _logger(self):
@@ -171,8 +188,7 @@ class Client():
 
                 if 'tim' in op.keys() and self._show_images:
                     await self._writer.writeline()
-                    img = self._server.getThumbNail(self._params[0], op['tim'])
-
+                    img = self._server.getThumbNail(self._params[0], op['tim'], self.img_size)
                     await self._writer.writeline(img)
                     await self._writer.writeline()
 
@@ -229,7 +245,7 @@ class Client():
 
             if 'tim' in post.keys() and self._show_images:
                 await self._writer.writeline()
-                img = self._server.getThumbNail(thread_id[0], post['tim'])
+                img = self._server.getThumbNail(thread_id[0], post['tim'], self.img_size)
                 await self._writer.writeline(img)
                 await self._writer.writeline()
 
@@ -281,7 +297,8 @@ class Client():
             width (int): width in characters
             height (int): height in characters
         """
-        ...
+        self._img_size = (width, height)
+        self._logger.debug(f"recived client term size change with naws: {self._img_size}")
 
     async def handler(self) -> None:
         """Handler method. Handles interactions with client.
@@ -310,10 +327,15 @@ class Client():
         self._writer.iac(telnetlib3.WONT, telnetlib3.ECHO)
         # tell the client to not use go ahead, this allows backspace
         self._writer.iac(telnetlib3.WONT, telnetlib3.SGA)
-        
+        # tell client to send terminal dimention changes with naws
         self._writer.iac(telnetlib3.DO, telnetlib3.NAWS)
-        
         self._writer.set_ext_callback(telnetlib3.NAWS, self.handle_naws)
+        
+        # these are the values from inital conenction, 
+        # changes will be handled using self.handle_naws
+        self._img_size = (self._writer.get_extra_info('rows'),
+                               self._writer.get_extra_info('cols'))
+
 
         await self._writer.writeline(config.welcome_message)
         stop = False
