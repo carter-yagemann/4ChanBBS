@@ -1,4 +1,5 @@
-python-aalib>=0.3.2
-telnetsrv>=0.4
-requests>=2.4.3
-Pillow>=2.6.1
+asyncio>=3.4.3
+Pillow>=9.3.0
+python-aalib>=0.4
+requests>=2.28.1
+telnetlib3>=2.0.0

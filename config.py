@@ -46,11 +46,17 @@ New to the server? Here's a quick guide:
 	lb                      - List all the available boards
 	lt <boardID>            - List the threads for a board
         ei/di                   - Enable/Disable the showing of images
+        exit                    - Closes client connection
 
 If you need additional help or examples, try help <command>.
 '''
     prompt = "4ChanBBS> "
     continue_prompt = "Press any key to continue..."
+    showImages = True
+    naws = True # if naws is true then images are generated to fit the client window size
+    img_hight = 40 # y
+    img_width = 80 # x
+
 
 
     ## Server Configuration

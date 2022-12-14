@@ -17,10 +17,11 @@
 #    See <http://www.gnu.org/licenses/> for a full copy of the license.
 #
 
-import aalib
 import io
+
+import aalib
 from PIL import Image
-import urllib
+
 
 def convert_image(img, x, y):
     screen = aalib.AsciiScreen(width=x, height=y)
@@ -28,11 +29,12 @@ def convert_image(img, x, y):
     screen.put_image((0, 0), img)
     return screen.render()
 
-def open_url(URL):
+
+def open_img(content):
     try:
-        file = io.BytesIO(urllib.urlopen(URL).read())
+        file = io.BytesIO(content)
         img = Image.open(file)
         return img
     except Exception as ex:
-        print('Error: Failed to open image at %s: %s' % (URL, str(ex)))
+        print('Error: Failed to convert image: %s' % (str(ex)))
         return
