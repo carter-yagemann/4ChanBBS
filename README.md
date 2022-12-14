@@ -1,4 +1,4 @@
-**Note:** This project is not activly maintained. Last tested on 3.8.10
+**Note:** This project is not actively maintained. Last tested on 3.8.10
 
 4Chan BBS
 =========
